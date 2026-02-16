@@ -1,73 +1,86 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Practica Fracciones</title>
-  <style>
-    body { font-family: Arial,sans-serif; padding: 20px; }
-    .exercise { border: 1px solid #ccc; margin: 15px 0; padding: 10px; }
-    input { width: 60px; padding: 5px; }
-    textarea { width: 100%; height: 60px; }
-    .btn { padding: 8px 12px; margin-top: 8px; cursor: pointer; }
-    .ok { color: green; font-weight: bold; }
-    .bad { color: red; font-weight: bold; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Practica Fracciones - Visual</title>
+<style>
+  body { font-family: Arial; padding: 20px; background: #f9f9f9; }
+  h2 { text-align: center; }
+  .exercise { border: 2px solid #333; border-radius: 8px; background: #fff; padding: 15px; margin: 20px 0; }
+  .step { margin: 10px 0; }
+  input, textarea { width: 100%; padding: 6px; font-size: 16px; margin-top: 4px; border-radius: 4px; border: 1px solid #ccc; }
+  button { margin-top: 8px; padding: 8px 12px; cursor: pointer; border-radius: 4px; border:none; background:#333; color:#fff; font-weight:bold; }
+  .ok { color: green; font-weight: bold; }
+  .bad { color: red; font-weight: bold; }
+  .solution { background:#eef; padding:8px; border-radius:4px; margin-top:8px; }
+</style>
 </head>
 <body>
 
-  <h2>Practica Fracciones</h2>
+<h2>Practica Fracciones y Problemas</h2>
 
-  <div class="exercise">
-    <p><strong>Ejercicio:</strong> 1/4 + 2/5 = ?</p>
-    <textarea id="steps1" placeholder="Escribe tus pasos aquí..."></textarea><br>
-    <label>Resultado: </label>
-    <input type="text" id="res1" placeholder="ej: 13/20">
-    <button class="btn" onclick="check1()">Comprobar</button>
-    <p id="out1"></p>
+<div class="exercise" id="ex1">
+  <p><strong>Ejercicio 1 – Tienda de ropa</strong><br>
+  Una tienda ha vendido 300 prendas. 1/3 son camisetas, 2/5 son sudaderas. El resto son pantalones.</p>
+
+  <div class="step">
+    <label>1️⃣ ¿Cuántas camisetas?</label>
+    <input type="text" id="ex1_step1" placeholder="Número de camisetas">
+    <button onclick="checkStep(1,1)">Comprobar</button>
+    <p id="ex1_out1"></p>
   </div>
 
-  <div class="exercise">
-    <p><strong>Ejercicio:</strong> 3/8 + 1/6 = ?</p>
-    <textarea id="steps2" placeholder="Escribe tus pasos aquí..."></textarea><br>
-    <label>Resultado: </label>
-    <input type="text" id="res2">
-    <button class="btn" onclick="check2()">Comprobar</button>
-    <p id="out2"></p>
+  <div class="step">
+    <label>2️⃣ ¿Cuántas sudaderas?</label>
+    <input type="text" id="ex1_step2" placeholder="Número de sudaderas">
+    <button onclick="checkStep(1,2)">Comprobar</button>
+    <p id="ex1_out2"></p>
   </div>
 
-  <script>
-    function simplify(num, den) {
-      function gcd(a,b){ return b?gcd(b,a%b):a; }
-      let g = gcd(num,den);
-      return [num/g, den/g];
-    }
+  <div class="step">
+    <label>3️⃣ ¿Cuántos pantalones y qué fracción representan?</label>
+    <input type="text" id="ex1_step3" placeholder="Ej: 100 (1/3)">
+    <button onclick="checkStep(1,3)">Comprobar</button>
+    <p id="ex1_out3"></p>
+  </div>
 
-    function check1() {
-      let r = document.getElementById('res1').value.trim();
-      let correct = simplify(13,20).join('/');
-      let out = document.getElementById('out1');
-      if (r === correct) {
-        out.textContent = "✔ Correcto!";
-        out.className = "ok";
-      } else {
-        out.textContent = "✘ Incorrecto → debería ser " + correct;
-        out.className = "bad";
-      }
-    }
+  <div class="solution" id="ex1_solution" style="display:none;">
+    <strong>Solución completa:</strong><br>
+    Camisetas: 300 × 1/3 = 100<br>
+    Sudaderas: 300 × 2/5 = 120<br>
+    Pantalones: 300 - 100 -120 = 80 → Fracción: 80/300 = 8/30 = 4/15
+  </div>
+  <button onclick="showSolution(1)">Mostrar solución completa</button>
+</div>
 
-    function check2() {
-      let r = document.getElementById('res2').value.trim();
-      let correct = simplify(11,24).join('/');
-      let out = document.getElementById('out2');
-      if (r === correct) {
-        out.textContent = "✔ Correcto!";
-        out.className = "ok";
-      } else {
-        out.textContent = "✘ Incorrecto → debería ser " + correct;
-        out.className = "bad";
-      }
-    }
-  </script>
+<script>
+// Función para comprobar pasos
+function checkStep(exercise, step){
+  let val = document.getElementById(`ex${exercise}_step${step}`).value.trim();
+  let out = document.getElementById(`ex${exercise}_out${step}`);
+  let correct;
+
+  if(exercise===1){
+    if(step===1) correct="100";
+    if(step===2) correct="120";
+    if(step===3) correct="80 (4/15)";
+  }
+
+  if(val===correct){
+    out.textContent="✔ Correcto";
+    out.className="ok";
+  } else {
+    out.textContent="✘ Incorrecto, revisa. Sugerencia: "+correct;
+    out.className="bad";
+  }
+}
+
+// Función mostrar solución completa
+function showSolution(exercise){
+  document.getElementById(`ex${exercise}_solution`).style.display="block";
+}
+</script>
 
 </body>
 </html>
