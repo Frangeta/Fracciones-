@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Practica Fracciones Kids</title>
+<title>Practica Fracciones Kids - Completa</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 body { font-family: 'Roboto', sans-serif; margin:0; background:#f0f8ff; color:#333; padding:20px;}
 h1 { text-align:center; margin-bottom:20px;}
-.card { background:#fff; border-radius:12px; box-shadow:0 6px 12px rgba(0,0,0,0.1); padding:20px; margin-bottom:25px;}
+.card { background:#fff; border-radius:12px; box-shadow:0 6px 12px rgba(0,0,0,0.12); padding:20px; margin-bottom:25px;}
 .step { margin:12px 0; }
 .step label { font-weight:500; display:block; margin-bottom:4px; font-size:16px;}
 .step input { width:100%; padding:10px; font-size:16px; border-radius:6px; border:1px solid #ccc;}
@@ -26,7 +26,7 @@ h1 { text-align:center; margin-bottom:20px;}
 </head>
 <body>
 
-<h1>Practica Fracciones - Kids</h1>
+<h1>Practica Fracciones - Completa</h1>
 
 <div id="progress"><div id="progress_bar"></div></div>
 
@@ -38,22 +38,22 @@ h1 { text-align:center; margin-bottom:20px;}
 // Funciones matemáticas
 function gcd(a,b){return b?gcd(b,a%b):a;}
 function lcm(a,b){return a*b/gcd(a,b);}
+function parseFraction(str){let parts=str.split('/'); return {num:parseInt(parts[0]), den:parseInt(parts[1])};}
+function fractionToString(n,d){return n+"/"+d;}
 
-// Generador de ejercicios simples
+// Generador de ejercicios
 let exercises=[];
 let currentEx=0;
 let totalEx=5;
 
-// Generar ejercicios aleatorios con denominadores distintos
 function generateExercises(){
   for(let i=0;i<totalEx;i++){
-    let total=Math.floor(Math.random()*300)+50; // 50 a 350
-    let d1=Math.floor(Math.random()*4)+2; // 2 a 5
-    let d2=Math.floor(Math.random()*4)+2; // 2 a 5
-    let n1=Math.floor(Math.random()*(d1-1))+1; // 1 a d1-1
-    let n2=Math.floor(Math.random()*(d2-1))+1; // 1 a d2-1
+    let d1=Math.floor(Math.random()*11)+2; // 2 a 12
+    let d2=Math.floor(Math.random()*11)+2;
+    let n1=Math.floor(Math.random()*(d1-1))+1;
+    let n2=Math.floor(Math.random()*(d2-1))+1;
     let type=Math.random()>0.5?"moda":"comida";
-    exercises.push({total,n1,d1,n2,d2,type});
+    exercises.push({n1,d1,n2,d2,type});
   }
 }
 
@@ -69,38 +69,39 @@ function showExercise(){
 
   let ex=exercises[currentEx];
   let desc=ex.type==="moda" ? 
-    `Una tienda tiene ${ex.total} prendas. ${ex.n1}/${ex.d1} son camisetas, ${ex.n2}/${ex.d2} son sudaderas. El resto son pantalones.` :
-    `Se prepararon ${ex.total} platos. ${ex.n1}/${ex.d1} son pizzas, ${ex.n2}/${ex.d2} son hamburguesas. El resto son ensaladas.`;
+    `Una tienda tiene prendas. ${ex.n1}/${ex.d1} son camisetas, ${ex.n2}/${ex.d2} son sudaderas. El resto son pantalones.` :
+    `Se prepararon platos. ${ex.n1}/${ex.d1} son pizzas, ${ex.n2}/${ex.d2} son hamburguesas. El resto ensaladas.`;
 
   let html=`<div class="card">
     <p><strong>Ejercicio ${currentEx+1}:</strong><br>${desc}</p>
 
     <div class="step">
-      <label>1️⃣ Primer grupo: Ajusta la fracción a denominador común</label>
-      <input type="text" id="step1" placeholder="Ej: 1/4">
+      <label>1️⃣ Ajusta las fracciones a denominador común</label>
+      <input type="text" id="step1" placeholder="Ej: 3/4, 5/6">
       <button onclick="checkStep(1)">Comprobar</button>
       <p id="out1"></p>
     </div>
 
     <div class="step">
-      <label>2️⃣ Segundo grupo: Ajusta la fracción a denominador común</label>
-      <input type="text" id="step2" placeholder="Ej: 2/5">
+      <label>2️⃣ Suma las fracciones</label>
+      <input type="text" id="step2" placeholder="Ej: 13/12">
       <button onclick="checkStep(2)">Comprobar</button>
       <p id="out2"></p>
     </div>
 
     <div class="step">
-      <label>3️⃣ Suma las fracciones y simplifica</label>
-      <input type="text" id="step3" placeholder="Ej: 13/20">
+      <label>3️⃣ Simplifica la fracción resultante</label>
+      <input type="text" id="step3" placeholder="Ej: 1/12">
       <button onclick="checkStep(3)">Comprobar</button>
       <p id="out3"></p>
     </div>
 
+    <button onclick="showSolution()">Mostrar solución paso a paso</button>
     <div class="solution" id="solution" style="display:none;"></div>
 
     <div class="notes">
       <label>📝 Notas personales:</label>
-      <textarea placeholder="Apunta aquí tus observaciones o recordatorios..."></textarea>
+      <textarea placeholder="Apunta tus observaciones o recordatorios..."></textarea>
     </div>
   </div>`;
 
@@ -114,42 +115,43 @@ function checkStep(step){
   let ex=exercises[currentEx];
   let val=document.getElementById(`step${step}`).value.trim();
   let out=document.getElementById(`out${step}`);
+  let m=lcm(ex.d1,ex.d2);
+  let n1_adj=ex.n1*(m/ex.d1);
+  let n2_adj=ex.n2*(m/ex.d2);
+  let sum=n1_adj+n2_adj;
+  let g=gcd(sum,m);
+  let simplified_n=sum/g;
+  let simplified_d=m/g;
 
   if(step===1){
-    // Primer grupo fracción ajustada al MCM
-    let m=lcm(ex.d1,ex.d2);
-    let correct=`${ex.n1*(m/ex.d1)}/${m}`;
+    let correct=fractionToString(n1_adj,m)+", "+fractionToString(n2_adj,m);
     if(val===correct){
       out.innerHTML='<span class="icon">✔</span>Correcto';
       out.className="ok";
     } else {
-      out.innerHTML='<span class="icon">✘</span>Incorrecto. Debes multiplicar numerador y denominador por el factor necesario. Ej: '+correct;
+      out.innerHTML='<span class="icon">✘</span>Incorrecto. Ajusta numeradores al MCM ('+m+'). Correcto: '+correct;
       out.className="bad";
     }
   }
 
   if(step===2){
-    let m=lcm(ex.d1,ex.d2);
-    let correct=`${ex.n2*(m/ex.d2)}/${m}`;
+    let correct=fractionToString(sum,m);
     if(val===correct){
       out.innerHTML='<span class="icon">✔</span>Correcto';
       out.className="ok";
     } else {
-      out.innerHTML='<span class="icon">✘</span>Incorrecto. Ajusta al mismo denominador. Ej: '+correct;
+      out.innerHTML='<span class="icon">✘</span>Incorrecto. Suma los numeradores: '+n1_adj+'+'+n2_adj+'='+sum+'. Correcto: '+correct;
       out.className="bad";
     }
   }
 
   if(step===3){
-    let m=lcm(ex.d1,ex.d2);
-    let sumN=ex.n1*(m/ex.d1)+ex.n2*(m/ex.d2);
-    let g=gcd(sumN,m);
-    let correct=`${sumN/g}/${m/g}`;
+    let correct=fractionToString(simplified_n,simplified_d);
     if(val===correct){
       out.innerHTML='<span class="icon">✔</span>Correcto';
       out.className="ok";
     } else {
-      out.innerHTML='<span class="icon">✘</span>Incorrecto. Suma los numeradores y simplifica. Ej: '+correct;
+      out.innerHTML='<span class="icon">✘</span>Incorrecto. Simplifica la fracción: '+sum+'/'+m+' → '+correct;
       out.className="bad";
     }
   }
@@ -167,15 +169,13 @@ function generateSolution(){
   let simplified_d=m/g;
   let sol=document.getElementById("solution");
   sol.innerHTML=`<strong>Solución paso a paso:</strong><br>
-1️⃣ Ajustamos ${ex.n1}/${ex.d1} a denominador común (${m}) → ${n1_adj}/${m}.<br>
-2️⃣ Ajustamos ${ex.n2}/${ex.d2} a denominador común (${m}) → ${n2_adj}/${m}.<br>
-3️⃣ Sumamos numeradores: ${n1_adj}+${n2_adj} = ${sum}.<br>
-4️⃣ Simplificamos la fracción ${sum}/${m} → ${simplified_n}/${simplified_d}.<br>
-✅ Esta es la fracción final simplificada.`;
+1️⃣ Ajustamos ${ex.n1}/${ex.d1} y ${ex.n2}/${ex.d2} a denominador común (${m}): ${n1_adj}/${m}, ${n2_adj}/${m}.<br>
+2️⃣ Sumamos los numeradores: ${n1_adj}+${n2_adj}=${sum} → ${sum}/${m}.<br>
+3️⃣ Simplificamos usando MCD(${sum},${m})=${g} → fracción final: ${simplified_n}/${simplified_d}.`;
   sol.style.display="none";
 }
 
-// Mostrar solución completa
+// Mostrar solución
 function showSolution(){
   document.getElementById("solution").style.display="block";
 }
