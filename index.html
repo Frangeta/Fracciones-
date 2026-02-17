@@ -3,204 +3,263 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fracciones 1º ESO - Aleatorio</title>
+<title>Academia de Fracciones</title>
 <style>
 body{
-  font-family: Arial;
-  background:#f4f6fa;
-  padding:20px;
+    font-family: 'Segoe UI', sans-serif;
+    margin:0;
+    background: linear-gradient(135deg,#4e73df,#1cc88a);
+    color:#333;
 }
-h1{text-align:center;}
+.container{
+    max-width:900px;
+    margin:auto;
+    padding:20px;
+}
 .card{
-  background:white;
-  padding:20px;
-  border-radius:12px;
-  box-shadow:0 6px 15px rgba(0,0,0,0.1);
-  margin-bottom:20px;
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.2);
+    margin-bottom:20px;
 }
-input{
-  padding:6px;
-  width:120px;
-}
+h1{text-align:center;color:white;}
 button{
-  padding:8px 14px;
-  margin-top:10px;
-  border:none;
-  border-radius:6px;
-  background:#0066cc;
-  color:white;
-  cursor:pointer;
+    padding:10px 15px;
+    border:none;
+    border-radius:8px;
+    background:#4e73df;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    margin:5px 0;
 }
-button:hover{background:#004c99;}
-.ok{color:green;font-weight:bold;}
-.bad{color:red;font-weight:bold;}
-.solution{
-  background:#eef7ff;
-  padding:15px;
-  border-radius:8px;
-  margin-top:15px;
-  display:none;
+button:hover{background:#2e59d9;}
+input{
+    padding:8px;
+    border-radius:6px;
+    border:1px solid #ccc;
+    margin:5px;
+    width:80px;
+    text-align:center;
 }
-textarea{
-  width:100%;
-  height:80px;
+.correct{color:green;font-weight:bold;}
+.incorrect{color:red;font-weight:bold;}
+.notes{
+    width:100%;
+    height:100px;
+    margin-top:10px;
+}
+.progress{
+    font-weight:bold;
 }
 </style>
 </head>
 <body>
 
-<h1>Ejercicios de Fracciones - 1º ESO</h1>
+<h1>📘 Academia de Fracciones</h1>
+
+<div class="container">
 
 <div class="card">
-<h3>Ejercicio 1 (Comparar fracciones)</h3>
-<p id="texto1"></p>
+<button onclick="startPractice()">Modo Práctica</button>
+<button onclick="startExam()">Modo Examen (10 ejercicios)</button>
+</div>
 
-<p>¿De qué producto hay más cantidad?</p>
-<input id="resp1a">
-<p id="r1a"></p>
+<div class="card" id="exerciseCard" style="display:none;">
+<div class="progress" id="progress"></div>
+<p id="question"></p>
 
-<p>¿De cuál hay menos?</p>
-<input id="resp1b">
-<p id="r1b"></p>
+<div id="answerArea"></div>
 
-<button onclick="corregir1()">Corregir</button>
-<button onclick="mostrarSol1()">Ver solución</button>
+<button onclick="checkAnswer()">Comprobar</button>
+<button onclick="showSolution()">Ver solución paso a paso</button>
 
-<div class="solution" id="sol1"></div>
+<div id="feedback"></div>
+<div id="solution"></div>
 
-<h4>Notas:</h4>
-<textarea></textarea>
+<textarea class="notes" placeholder="✏️ Apuntes..."></textarea>
+</div>
+
+<div class="card" id="resultCard" style="display:none;">
+<h2>Resultado Final</h2>
+<p id="finalScore"></p>
+<button onclick="location.reload()">Reiniciar</button>
 </div>
 
 <div class="card">
-<h3>Ejercicio 2 (Fracción de un número)</h3>
-<p id="texto2"></p>
+<h3>Historial</h3>
+<div id="history"></div>
+</div>
 
-<p>a) ¿Cuántos participaron en la primera actividad?</p>
-<input id="resp2a">
-<p id="r2a"></p>
-
-<p>b) ¿Cuántos participaron en la segunda actividad?</p>
-<input id="resp2b">
-<p id="r2b"></p>
-
-<p>c) ¿Qué fracción participó en otras actividades?</p>
-<input id="resp2c1" placeholder="Ej: 1/20">
-<p id="r2c1"></p>
-
-<p>¿Cuántos son?</p>
-<input id="resp2c2">
-<p id="r2c2"></p>
-
-<button onclick="corregir2()">Corregir</button>
-<button onclick="mostrarSol2()">Ver solución</button>
-
-<div class="solution" id="sol2"></div>
-
-<h4>Notas:</h4>
-<textarea></textarea>
 </div>
 
 <script>
 
-// Funciones matemáticas
-function gcd(a,b){return b?gcd(b,a%b):a;}
-function lcm(a,b){return a*b/gcd(a,b);}
+let mode = "practice";
+let current = 0;
+let totalExercises = 10;
+let score = 0;
+let exerciseData = [];
 
-// GENERAR EJERCICIO 1
-let d1=Math.floor(Math.random()*9)+2;
-let d2=Math.floor(Math.random()*9)+2;
-let n1=Math.floor(Math.random()*(d1-1))+1;
-let n2=Math.floor(Math.random()*(d2-1))+1;
+const contexts = [
+"En una tienda online",
+"En un campeonato de videojuegos",
+"En una excursión escolar",
+"En una receta de cocina",
+"En una competición deportiva",
+"En una biblioteca",
+"En un festival",
+"En un parque de atracciones"
+];
 
-let frutas=["manzanas","naranjas","peras","plátanos"];
-let f1=frutas[Math.floor(Math.random()*frutas.length)];
-let f2=frutas[Math.floor(Math.random()*frutas.length)];
-
-document.getElementById("texto1").innerHTML=
-`En el supermercado hemos comprado <b>${n1}/${d1}</b> kg de ${f1} y 
-<b>${n2}/${d2}</b> kg de ${f2}.`;
-
-let v1=n1/d1;
-let v2=n2/d2;
-
-function corregir1(){
-document.getElementById("r1a").innerHTML=
-(document.getElementById("resp1a").value.toLowerCase().includes(v1>v2?f1:f2))?
-"<span class='ok'>Correcto</span>":
-"<span class='bad'>Incorrecto</span>";
-
-document.getElementById("r1b").innerHTML=
-(document.getElementById("resp1b").value.toLowerCase().includes(v1<v2?f1:f2))?
-"<span class='ok'>Correcto</span>":
-"<span class='bad'>Incorrecto</span>";
+function randomInt(min,max){
+    return Math.floor(Math.random()*(max-min+1))+min;
 }
 
-function mostrarSol1(){
-document.getElementById("sol1").style.display="block";
-document.getElementById("sol1").innerHTML=
-`Pasamos a decimal:<br>
-${n1}/${d1} = ${(v1).toFixed(2)}<br>
-${n2}/${d2} = ${(v2).toFixed(2)}<br><br>
-Mayor: <b>${v1>v2?f1:f2}</b><br>
-Menor: <b>${v1<v2?f1:f2}</b>`;
+function gcd(a,b){
+    while(b){[a,b]=[b,a%b];}
+    return a;
 }
 
-
-// GENERAR EJERCICIO 2
-let total=Math.floor(Math.random()*500)+100;
-let d3=Math.floor(Math.random()*9)+2;
-let d4=Math.floor(Math.random()*9)+2;
-let n3=Math.floor(Math.random()*(d3-1))+1;
-let n4=Math.floor(Math.random()*(d4-1))+1;
-
-document.getElementById("texto2").innerHTML=
-`En unas Olimpiadas participaron <b>${total}</b> alumnos.
-<br>${n3}/${d3} participaron en salto.
-<br>${n4}/${d4} participaron en velocidad.
-<br>El resto en otras disciplinas.`;
-
-let act1=total*n3/d3;
-let act2=total*n4/d4;
-
-let m=lcm(d3,d4);
-let sumFrac=(n3*(m/d3))+(n4*(m/d4));
-let restoFrac=(m-sumFrac)+"/"+m;
-let restoNum=total - act1 - act2;
-
-function corregir2(){
-document.getElementById("r2a").innerHTML=
-(document.getElementById("resp2a").value==act1)?
-"<span class='ok'>Correcto</span>":
-"<span class='bad'>Incorrecto</span>";
-
-document.getElementById("r2b").innerHTML=
-(document.getElementById("resp2b").value==act2)?
-"<span class='ok'>Correcto</span>":
-"<span class='bad'>Incorrecto</span>";
-
-document.getElementById("r2c1").innerHTML=
-(document.getElementById("resp2c1").value==restoFrac)?
-"<span class='ok'>Correcto</span>":
-"<span class='bad'>Incorrecto</span>";
-
-document.getElementById("r2c2").innerHTML=
-(document.getElementById("resp2c2").value==restoNum)?
-"<span class='ok'>Correcto</span>":
-"<span class='bad'>Incorrecto</span>";
+function lcm(a,b){
+    return (a*b)/gcd(a,b);
 }
 
-function mostrarSol2(){
-document.getElementById("sol2").style.display="block";
-document.getElementById("sol2").innerHTML=
-`a) ${total} × ${n3}/${d3} = ${act1}<br>
-b) ${total} × ${n4}/${d4} = ${act2}<br><br>
-Sumamos fracciones:<br>
-MCM(${d3},${d4}) = ${m}<br>
-Suma = ${sumFrac}/${m}<br>
-Resto = ${restoFrac}<br><br>
-${restoFrac} de ${total} = ${restoNum}`;
+function simplify(n,d){
+    let g = gcd(n,d);
+    return [n/g,d/g];
 }
+
+function generateExercise(){
+    let d1 = randomInt(3,12);
+    let d2 = randomInt(3,12);
+    while(d1===d2){d2=randomInt(3,12);}
+    let n1 = randomInt(1,d1-1);
+    let n2 = randomInt(1,d2-1);
+
+    let context = contexts[randomInt(0,contexts.length-1)];
+    let total = randomInt(100,500);
+
+    return {n1,d1,n2,d2,context,total};
+}
+
+function startPractice(){
+    mode="practice";
+    totalExercises=1;
+    start();
+}
+
+function startExam(){
+    mode="exam";
+    totalExercises=10;
+    start();
+}
+
+function start(){
+    current=0;
+    score=0;
+    exerciseData=[];
+    document.getElementById("exerciseCard").style.display="block";
+    document.getElementById("resultCard").style.display="none";
+    nextExercise();
+}
+
+function nextExercise(){
+    if(current>=totalExercises){
+        endExam();
+        return;
+    }
+    document.getElementById("feedback").innerHTML="";
+    document.getElementById("solution").innerHTML="";
+    let data = generateExercise();
+    exerciseData.push(data);
+    document.getElementById("progress").innerText="Ejercicio "+(current+1)+" de "+totalExercises;
+    document.getElementById("question").innerHTML=
+    `${data.context} hay ${data.total} personas.
+    ${data.n1}/${data.d1} participan en una actividad y ${data.n2}/${data.d2} en otra.
+    ¿Qué fracción participa en total? ¿Cuántas personas son?`;
+
+    document.getElementById("answerArea").innerHTML=`
+    Fracción total:
+    <input id="num"> /
+    <input id="den"><br>
+    Personas:
+    <input id="people">
+    `;
+}
+
+function checkAnswer(){
+    let data = exerciseData[current];
+    let l = lcm(data.d1,data.d2);
+    let totalNum = data.n1*(l/data.d1)+data.n2*(l/data.d2);
+    let simp = simplify(totalNum,l);
+
+    let userN=parseInt(document.getElementById("num").value);
+    let userD=parseInt(document.getElementById("den").value);
+    let userP=parseInt(document.getElementById("people").value);
+
+    let correctPeople = (simp[0]/simp[1])*data.total;
+
+    if(userN===simp[0] && userD===simp[1] && userP===correctPeople){
+        document.getElementById("feedback").innerHTML="<span class='correct'>✔ Correcto</span>";
+        score++;
+    }else{
+        document.getElementById("feedback").innerHTML="<span class='incorrect'>✘ Incorrecto</span>";
+    }
+
+    current++;
+    if(mode==="practice"){
+        setTimeout(()=>nextExercise(),2000);
+    }
+}
+
+function showSolution(){
+    let data = exerciseData[current];
+    let l = lcm(data.d1,data.d2);
+    let adj1 = data.n1*(l/data.d1);
+    let adj2 = data.n2*(l/data.d2);
+    let totalNum = adj1+adj2;
+    let simp = simplify(totalNum,l);
+    let people = (simp[0]/simp[1])*data.total;
+
+    document.getElementById("solution").innerHTML=`
+    <hr>
+    <b>Paso 1:</b> MCM(${data.d1},${data.d2}) = ${l}<br>
+    <b>Paso 2:</b> Ajustamos: ${adj1}/${l} + ${adj2}/${l}<br>
+    <b>Paso 3:</b> Sumamos: ${totalNum}/${l}<br>
+    <b>Paso 4:</b> Simplificamos: ${simp[0]}/${simp[1]}<br>
+    <b>Paso 5:</b> ${simp[0]}/${simp[1]} de ${data.total} = ${people} personas
+    `;
+}
+
+function endExam(){
+    document.getElementById("exerciseCard").style.display="none";
+    document.getElementById("resultCard").style.display="block";
+    let grade = (score/totalExercises)*10;
+    document.getElementById("finalScore").innerHTML=
+    `Nota final: ${grade.toFixed(2)} / 10`;
+
+    saveHistory(grade.toFixed(2));
+}
+
+function saveHistory(grade){
+    let history = JSON.parse(localStorage.getItem("fractionHistory")) || [];
+    history.push({date:new Date().toLocaleString(),grade});
+    localStorage.setItem("fractionHistory",JSON.stringify(history));
+    loadHistory();
+}
+
+function loadHistory(){
+    let history = JSON.parse(localStorage.getItem("fractionHistory")) || [];
+    let html="";
+    history.forEach(h=>{
+        html+=`📅 ${h.date} → Nota: ${h.grade}/10<br>`;
+    });
+    document.getElementById("history").innerHTML=html;
+}
+
+loadHistory();
 
 </script>
 
