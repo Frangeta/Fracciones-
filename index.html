@@ -3,82 +3,108 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Academia de Fracciones</title>
+<title>Control de Fracciones</title>
+
 <style>
 body{
     font-family: 'Segoe UI', sans-serif;
     margin:0;
-    background: linear-gradient(135deg,#4e73df,#1cc88a);
+    background: linear-gradient(135deg,#2c3e50,#4ca1af);
     color:#333;
 }
 .container{
-    max-width:900px;
+    max-width:1000px;
     margin:auto;
     padding:20px;
 }
 .card{
     background:white;
-    padding:20px;
-    border-radius:15px;
-    box-shadow:0 8px 20px rgba(0,0,0,0.2);
+    padding:25px;
+    border-radius:16px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.25);
     margin-bottom:20px;
 }
-h1{text-align:center;color:white;}
+h1{
+    text-align:center;
+    color:white;
+}
 button{
     padding:10px 15px;
     border:none;
     border-radius:8px;
-    background:#4e73df;
+    background:#3498db;
     color:white;
     font-weight:bold;
     cursor:pointer;
-    margin:5px 0;
+    margin:5px;
 }
-button:hover{background:#2e59d9;}
+button:hover{background:#2980b9;}
 input{
-    padding:8px;
+    padding:6px;
     border-radius:6px;
     border:1px solid #ccc;
-    margin:5px;
-    width:80px;
+    width:70px;
     text-align:center;
 }
 .correct{color:green;font-weight:bold;}
 .incorrect{color:red;font-weight:bold;}
-.notes{
+textarea{
     width:100%;
-    height:100px;
+    height:90px;
     margin-top:10px;
 }
 .progress{
     font-weight:bold;
+    margin-bottom:10px;
 }
 </style>
 </head>
 <body>
 
-<h1>📘 Academia de Fracciones</h1>
+<h1>📘 Plataforma de Fracciones</h1>
 
 <div class="container">
 
 <div class="card">
 <button onclick="startPractice()">Modo Práctica</button>
-<button onclick="startExam()">Modo Examen (10 ejercicios)</button>
+<button onclick="startExam()">Modo Examen (10)</button>
 </div>
 
 <div class="card" id="exerciseCard" style="display:none;">
+
 <div class="progress" id="progress"></div>
 <p id="question"></p>
 
-<div id="answerArea"></div>
+<h3>1️⃣ Calcula el MCM</h3>
+<input id="mcm">
 
+<h3>2️⃣ Ajusta las fracciones</h3>
+Fracción 1: <input id="a1n"> / <input id="a1d"><br>
+Fracción 2: <input id="a2n"> / <input id="a2d">
+
+<h3>3️⃣ Fracción total</h3>
+<input id="totaln"> / <input id="totald">
+
+<h3>4️⃣ Número total de personas</h3>
+<input id="peopleTotal">
+
+<h3>5️⃣ Fracción restante</h3>
+<input id="restn"> / <input id="restd">
+
+<h3>6️⃣ Personas restantes</h3>
+<input id="peopleRest">
+
+<br><br>
 <button onclick="checkAnswer()">Comprobar</button>
-<button onclick="showSolution()">Ver solución paso a paso</button>
+<button onclick="showSolution()">Ver solución</button>
+<button onclick="nextExercise()">Nuevo / Siguiente</button>
+<button onclick="skipQuestion()">Saltar (solo examen)</button>
 
 <div id="feedback"></div>
 <div id="solution"></div>
 
-<textarea class="notes" placeholder="✏️ Apuntes..."></textarea>
+<textarea placeholder="✏️ Apuntes..."></textarea>
+
 </div>
 
 <div class="card" id="resultCard" style="display:none;">
@@ -87,179 +113,151 @@ input{
 <button onclick="location.reload()">Reiniciar</button>
 </div>
 
-<div class="card">
-<h3>Historial</h3>
-<div id="history"></div>
-</div>
-
 </div>
 
 <script>
 
-let mode = "practice";
-let current = 0;
-let totalExercises = 10;
-let score = 0;
-let exerciseData = [];
+let mode="practice";
+let current=0;
+let total=10;
+let score=0;
+let data;
 
-const contexts = [
-"En una tienda online",
-"En un campeonato de videojuegos",
-"En una excursión escolar",
-"En una receta de cocina",
-"En una competición deportiva",
-"En una biblioteca",
-"En un festival",
-"En un parque de atracciones"
+const contexts=[
+"En un torneo de videojuegos",
+"En un concierto",
+"En una excursión",
+"En una liga deportiva",
+"En una feria escolar",
+"En un campamento"
 ];
 
-function randomInt(min,max){
-    return Math.floor(Math.random()*(max-min+1))+min;
-}
+function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
 
-function gcd(a,b){
-    while(b){[a,b]=[b,a%b];}
-    return a;
-}
+function gcd(a,b){while(b){[a,b]=[b,a%b];}return a;}
+function lcm(a,b){return (a*b)/gcd(a,b);}
+function simplify(n,d){let g=gcd(n,d);return[n/g,d/g];}
 
-function lcm(a,b){
-    return (a*b)/gcd(a,b);
-}
+function generate(){
+    let d1=rand(3,12);
+    let d2=rand(3,12);
+    while(d1===d2){d2=rand(3,12);}
+    let n1=rand(1,d1-1);
+    let n2=rand(1,d2-1);
+    let totalPeople=rand(200,600);
 
-function simplify(n,d){
-    let g = gcd(n,d);
-    return [n/g,d/g];
-}
-
-function generateExercise(){
-    let d1 = randomInt(3,12);
-    let d2 = randomInt(3,12);
-    while(d1===d2){d2=randomInt(3,12);}
-    let n1 = randomInt(1,d1-1);
-    let n2 = randomInt(1,d2-1);
-
-    let context = contexts[randomInt(0,contexts.length-1)];
-    let total = randomInt(100,500);
-
-    return {n1,d1,n2,d2,context,total};
+    return{n1,d1,n2,d2,totalPeople,
+        context:contexts[rand(0,contexts.length-1)]
+    };
 }
 
 function startPractice(){
     mode="practice";
-    totalExercises=1;
-    start();
+    current=0;
+    score=0;
+    showExercise();
 }
 
 function startExam(){
     mode="exam";
-    totalExercises=10;
-    start();
-}
-
-function start(){
     current=0;
     score=0;
-    exerciseData=[];
-    document.getElementById("exerciseCard").style.display="block";
-    document.getElementById("resultCard").style.display="none";
-    nextExercise();
+    showExercise();
 }
 
-function nextExercise(){
-    if(current>=totalExercises){
-        endExam();
-        return;
-    }
+function showExercise(){
+    if(mode==="exam" && current>=10){endExam();return;}
+    data=generate();
+    document.getElementById("exerciseCard").style.display="block";
+    document.getElementById("resultCard").style.display="none";
+    document.getElementById("progress").innerText=
+    mode==="exam"?"Pregunta "+(current+1)+" de 10":"Modo práctica";
+
+    document.getElementById("question").innerHTML=
+    `${data.context} participan ${data.totalPeople} personas.
+    ${data.n1}/${data.d1} están en una actividad y 
+    ${data.n2}/${data.d2} en otra.
+    Calcula el total y lo que queda.`;
+
     document.getElementById("feedback").innerHTML="";
     document.getElementById("solution").innerHTML="";
-    let data = generateExercise();
-    exerciseData.push(data);
-    document.getElementById("progress").innerText="Ejercicio "+(current+1)+" de "+totalExercises;
-    document.getElementById("question").innerHTML=
-    `${data.context} hay ${data.total} personas.
-    ${data.n1}/${data.d1} participan en una actividad y ${data.n2}/${data.d2} en otra.
-    ¿Qué fracción participa en total? ¿Cuántas personas son?`;
-
-    document.getElementById("answerArea").innerHTML=`
-    Fracción total:
-    <input id="num"> /
-    <input id="den"><br>
-    Personas:
-    <input id="people">
-    `;
 }
 
 function checkAnswer(){
-    let data = exerciseData[current];
-    let l = lcm(data.d1,data.d2);
-    let totalNum = data.n1*(l/data.d1)+data.n2*(l/data.d2);
-    let simp = simplify(totalNum,l);
 
-    let userN=parseInt(document.getElementById("num").value);
-    let userD=parseInt(document.getElementById("den").value);
-    let userP=parseInt(document.getElementById("people").value);
+    let realMcm=lcm(data.d1,data.d2);
+    let adj1=data.n1*(realMcm/data.d1);
+    let adj2=data.n2*(realMcm/data.d2);
+    let totalNum=adj1+adj2;
+    let simp=simplify(totalNum,realMcm);
 
-    let correctPeople = (simp[0]/simp[1])*data.total;
+    let peopleTotal=(simp[0]/simp[1])*data.totalPeople;
+    let restFrac=[simp[1]-simp[0],simp[1]];
+    let restPeople=data.totalPeople-peopleTotal;
 
-    if(userN===simp[0] && userD===simp[1] && userP===correctPeople){
-        document.getElementById("feedback").innerHTML="<span class='correct'>✔ Correcto</span>";
-        score++;
+    let correct=true;
+
+    if(parseInt(mcm.value)!==realMcm)correct=false;
+    if(parseInt(a1n.value)!==adj1||parseInt(a1d.value)!==realMcm)correct=false;
+    if(parseInt(a2n.value)!==adj2||parseInt(a2d.value)!==realMcm)correct=false;
+    if(parseInt(totaln.value)!==simp[0]||parseInt(totald.value)!==simp[1])correct=false;
+    if(parseInt(peopleTotal.value)!==peopleTotal)correct=false;
+    if(parseInt(restn.value)!==restFrac[0]||parseInt(restd.value)!==restFrac[1])correct=false;
+    if(parseInt(peopleRest.value)!==restPeople)correct=false;
+
+    if(correct){
+        feedback.innerHTML="<span class='correct'>✔ Todo correcto</span>";
+        if(mode==="exam")score++;
     }else{
-        document.getElementById("feedback").innerHTML="<span class='incorrect'>✘ Incorrecto</span>";
+        feedback.innerHTML="<span class='incorrect'>✘ Hay errores</span>";
     }
 
-    current++;
+    if(mode==="exam")current++;
+}
+
+function skipQuestion(){
+    if(mode==="exam"){
+        current++;
+        showExercise();
+    }
+}
+
+function nextExercise(){
     if(mode==="practice"){
-        setTimeout(()=>nextExercise(),2000);
+        showExercise();
+    }else{
+        showExercise();
     }
 }
 
 function showSolution(){
-    let data = exerciseData[current];
-    let l = lcm(data.d1,data.d2);
-    let adj1 = data.n1*(l/data.d1);
-    let adj2 = data.n2*(l/data.d2);
-    let totalNum = adj1+adj2;
-    let simp = simplify(totalNum,l);
-    let people = (simp[0]/simp[1])*data.total;
 
-    document.getElementById("solution").innerHTML=`
+    let realMcm=lcm(data.d1,data.d2);
+    let adj1=data.n1*(realMcm/data.d1);
+    let adj2=data.n2*(realMcm/data.d2);
+    let totalNum=adj1+adj2;
+    let simp=simplify(totalNum,realMcm);
+    let peopleTotal=(simp[0]/simp[1])*data.totalPeople;
+    let restFrac=[simp[1]-simp[0],simp[1]];
+    let restPeople=data.totalPeople-peopleTotal;
+
+    solution.innerHTML=`
     <hr>
-    <b>Paso 1:</b> MCM(${data.d1},${data.d2}) = ${l}<br>
-    <b>Paso 2:</b> Ajustamos: ${adj1}/${l} + ${adj2}/${l}<br>
-    <b>Paso 3:</b> Sumamos: ${totalNum}/${l}<br>
-    <b>Paso 4:</b> Simplificamos: ${simp[0]}/${simp[1]}<br>
-    <b>Paso 5:</b> ${simp[0]}/${simp[1]} de ${data.total} = ${people} personas
+    <b>Paso 1:</b> MCM(${data.d1},${data.d2}) = ${realMcm}<br>
+    <b>Paso 2:</b> Ajustamos → ${adj1}/${realMcm} + ${adj2}/${realMcm}<br>
+    <b>Paso 3:</b> Sumamos → ${totalNum}/${realMcm}<br>
+    <b>Paso 4:</b> Simplificamos → ${simp[0]}/${simp[1]}<br>
+    <b>Paso 5:</b> Personas → ${peopleTotal}<br>
+    <b>Paso 6:</b> Resto → ${restFrac[0]}/${restFrac[1]} = ${restPeople} personas
     `;
 }
 
 function endExam(){
-    document.getElementById("exerciseCard").style.display="none";
-    document.getElementById("resultCard").style.display="block";
-    let grade = (score/totalExercises)*10;
-    document.getElementById("finalScore").innerHTML=
-    `Nota final: ${grade.toFixed(2)} / 10`;
-
-    saveHistory(grade.toFixed(2));
+    exerciseCard.style.display="none";
+    resultCard.style.display="block";
+    let grade=(score/10)*10;
+    finalScore.innerHTML=`Nota final: ${grade.toFixed(2)} / 10`;
 }
-
-function saveHistory(grade){
-    let history = JSON.parse(localStorage.getItem("fractionHistory")) || [];
-    history.push({date:new Date().toLocaleString(),grade});
-    localStorage.setItem("fractionHistory",JSON.stringify(history));
-    loadHistory();
-}
-
-function loadHistory(){
-    let history = JSON.parse(localStorage.getItem("fractionHistory")) || [];
-    let html="";
-    history.forEach(h=>{
-        html+=`📅 ${h.date} → Nota: ${h.grade}/10<br>`;
-    });
-    document.getElementById("history").innerHTML=html;
-}
-
-loadHistory();
 
 </script>
 
