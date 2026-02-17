@@ -3,12 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ejercicios de Fracciones 1º ESO</title>
+<title>Fracciones 1º ESO - Aleatorio</title>
 <style>
 body{
-  font-family: Arial, sans-serif;
+  font-family: Arial;
   background:#f4f6fa;
-  margin:0;
   padding:20px;
 }
 h1{text-align:center;}
@@ -19,13 +18,9 @@ h1{text-align:center;}
   box-shadow:0 6px 15px rgba(0,0,0,0.1);
   margin-bottom:20px;
 }
-.question{
-  margin-top:15px;
-}
 input{
-  padding:8px;
+  padding:6px;
   width:120px;
-  margin-top:5px;
 }
 button{
   padding:8px 14px;
@@ -46,10 +41,9 @@ button:hover{background:#004c99;}
   margin-top:15px;
   display:none;
 }
-.notes textarea{
+textarea{
   width:100%;
   height:80px;
-  margin-top:10px;
 }
 </style>
 </head>
@@ -58,151 +52,156 @@ button:hover{background:#004c99;}
 <h1>Ejercicios de Fracciones - 1º ESO</h1>
 
 <div class="card">
-<h3>Ejercicio 1</h3>
+<h3>Ejercicio 1 (Comparar fracciones)</h3>
+<p id="texto1"></p>
 
-<p>
-En el supermercado hemos comprado 
-<b>2/5 kg</b> de manzanas,
-<b>3/4 kg</b> de naranjas y
-<b>4/10 kg</b> de peras.
-</p>
-
-<p><b>a)</b> ¿De qué fruta hemos comprado más cantidad?</p>
-<input id="e1a" placeholder="Ej: naranjas">
+<p>¿De qué producto hay más cantidad?</p>
+<input id="resp1a">
 <p id="r1a"></p>
 
-<p><b>b)</b> ¿De qué fruta hemos comprado menos cantidad?</p>
-<input id="e1b" placeholder="Ej: manzanas">
+<p>¿De cuál hay menos?</p>
+<input id="resp1b">
 <p id="r1b"></p>
 
-<button onclick="corregir1()">Corregir ejercicio</button>
-<button onclick="mostrarSol1()">Mostrar solución paso a paso</button>
+<button onclick="corregir1()">Corregir</button>
+<button onclick="mostrarSol1()">Ver solución</button>
 
-<div class="solution" id="sol1">
-<b>Solución paso a paso:</b><br><br>
+<div class="solution" id="sol1"></div>
 
-2/5 = 0,4<br>
-3/4 = 0,75<br>
-4/10 = 0,4<br><br>
-
-Comparamos:<br>
-0,75 > 0,4<br><br>
-
-➡ Más cantidad: <b>naranjas</b><br>
-➡ Menos cantidad: <b>manzanas y peras</b>
-</div>
-
-<div class="notes">
-<b>Notas:</b>
+<h4>Notas:</h4>
 <textarea></textarea>
-</div>
 </div>
 
 <div class="card">
-<h3>Ejercicio 2</h3>
+<h3>Ejercicio 2 (Fracción de un número)</h3>
+<p id="texto2"></p>
 
-<p>
-En las Olimpiadas han participado <b>300 alumnos</b>.
-<br>
-1/5 participaron en salto de altura.
-<br>
-3/4 participaron en 100 metros lisos.
-<br>
-El resto participaron en otras disciplinas.
-</p>
-
-<p><b>a)</b> ¿Cuántos participaron en 100 metros lisos?</p>
-<input id="e2a">
+<p>a) ¿Cuántos participaron en la primera actividad?</p>
+<input id="resp2a">
 <p id="r2a"></p>
 
-<p><b>b)</b> ¿Cuántos participaron en salto de altura?</p>
-<input id="e2b">
+<p>b) ¿Cuántos participaron en la segunda actividad?</p>
+<input id="resp2b">
 <p id="r2b"></p>
 
-<p><b>c)</b> ¿Qué fracción participó en otras disciplinas?</p>
-<input id="e2c1" placeholder="Ej: 1/20">
+<p>c) ¿Qué fracción participó en otras actividades?</p>
+<input id="resp2c1" placeholder="Ej: 1/20">
 <p id="r2c1"></p>
 
-<p>¿Cuántos alumnos son?</p>
-<input id="e2c2">
+<p>¿Cuántos son?</p>
+<input id="resp2c2">
 <p id="r2c2"></p>
 
-<button onclick="corregir2()">Corregir ejercicio</button>
-<button onclick="mostrarSol2()">Mostrar solución paso a paso</button>
+<button onclick="corregir2()">Corregir</button>
+<button onclick="mostrarSol2()">Ver solución</button>
 
-<div class="solution" id="sol2">
-<b>Solución paso a paso:</b><br><br>
+<div class="solution" id="sol2"></div>
 
-a) 3/4 de 300<br>
-300 × 3/4 = 900/4 = 225 alumnos<br><br>
-
-b) 1/5 de 300<br>
-300 × 1/5 = 60 alumnos<br><br>
-
-c) Sumamos fracciones:<br>
-1/5 + 3/4<br><br>
-
-MCM(5,4)=20<br>
-1/5 = 4/20<br>
-3/4 = 15/20<br><br>
-
-4/20 + 15/20 = 19/20<br><br>
-
-Fracción restante = 1 - 19/20 = 1/20<br><br>
-
-1/20 de 300 = 15 alumnos
-</div>
-
-<div class="notes">
-<b>Notas:</b>
+<h4>Notas:</h4>
 <textarea></textarea>
-</div>
 </div>
 
 <script>
-function corregir1(){
-let a=document.getElementById("e1a").value.toLowerCase();
-let b=document.getElementById("e1b").value.toLowerCase();
 
+// Funciones matemáticas
+function gcd(a,b){return b?gcd(b,a%b):a;}
+function lcm(a,b){return a*b/gcd(a,b);}
+
+// GENERAR EJERCICIO 1
+let d1=Math.floor(Math.random()*9)+2;
+let d2=Math.floor(Math.random()*9)+2;
+let n1=Math.floor(Math.random()*(d1-1))+1;
+let n2=Math.floor(Math.random()*(d2-1))+1;
+
+let frutas=["manzanas","naranjas","peras","plátanos"];
+let f1=frutas[Math.floor(Math.random()*frutas.length)];
+let f2=frutas[Math.floor(Math.random()*frutas.length)];
+
+document.getElementById("texto1").innerHTML=
+`En el supermercado hemos comprado <b>${n1}/${d1}</b> kg de ${f1} y 
+<b>${n2}/${d2}</b> kg de ${f2}.`;
+
+let v1=n1/d1;
+let v2=n2/d2;
+
+function corregir1(){
 document.getElementById("r1a").innerHTML=
-(a.includes("naranja"))?"<span class='ok'>Correcto</span>":
+(document.getElementById("resp1a").value.toLowerCase().includes(v1>v2?f1:f2))?
+"<span class='ok'>Correcto</span>":
 "<span class='bad'>Incorrecto</span>";
 
 document.getElementById("r1b").innerHTML=
-(b.includes("manzana")||b.includes("pera"))?
-"<span class='ok'>Correcto</span>":
-"<span class='bad'>Incorrecto</span>";
-}
-
-function corregir2(){
-document.getElementById("r2a").innerHTML=
-(document.getElementById("e2a").value==225)?
-"<span class='ok'>Correcto</span>":
-"<span class='bad'>Incorrecto</span>";
-
-document.getElementById("r2b").innerHTML=
-(document.getElementById("e2b").value==60)?
-"<span class='ok'>Correcto</span>":
-"<span class='bad'>Incorrecto</span>";
-
-document.getElementById("r2c1").innerHTML=
-(document.getElementById("e2c1").value=="1/20")?
-"<span class='ok'>Correcto</span>":
-"<span class='bad'>Incorrecto</span>";
-
-document.getElementById("r2c2").innerHTML=
-(document.getElementById("e2c2").value==15)?
+(document.getElementById("resp1b").value.toLowerCase().includes(v1<v2?f1:f2))?
 "<span class='ok'>Correcto</span>":
 "<span class='bad'>Incorrecto</span>";
 }
 
 function mostrarSol1(){
 document.getElementById("sol1").style.display="block";
+document.getElementById("sol1").innerHTML=
+`Pasamos a decimal:<br>
+${n1}/${d1} = ${(v1).toFixed(2)}<br>
+${n2}/${d2} = ${(v2).toFixed(2)}<br><br>
+Mayor: <b>${v1>v2?f1:f2}</b><br>
+Menor: <b>${v1<v2?f1:f2}</b>`;
+}
+
+
+// GENERAR EJERCICIO 2
+let total=Math.floor(Math.random()*500)+100;
+let d3=Math.floor(Math.random()*9)+2;
+let d4=Math.floor(Math.random()*9)+2;
+let n3=Math.floor(Math.random()*(d3-1))+1;
+let n4=Math.floor(Math.random()*(d4-1))+1;
+
+document.getElementById("texto2").innerHTML=
+`En unas Olimpiadas participaron <b>${total}</b> alumnos.
+<br>${n3}/${d3} participaron en salto.
+<br>${n4}/${d4} participaron en velocidad.
+<br>El resto en otras disciplinas.`;
+
+let act1=total*n3/d3;
+let act2=total*n4/d4;
+
+let m=lcm(d3,d4);
+let sumFrac=(n3*(m/d3))+(n4*(m/d4));
+let restoFrac=(m-sumFrac)+"/"+m;
+let restoNum=total - act1 - act2;
+
+function corregir2(){
+document.getElementById("r2a").innerHTML=
+(document.getElementById("resp2a").value==act1)?
+"<span class='ok'>Correcto</span>":
+"<span class='bad'>Incorrecto</span>";
+
+document.getElementById("r2b").innerHTML=
+(document.getElementById("resp2b").value==act2)?
+"<span class='ok'>Correcto</span>":
+"<span class='bad'>Incorrecto</span>";
+
+document.getElementById("r2c1").innerHTML=
+(document.getElementById("resp2c1").value==restoFrac)?
+"<span class='ok'>Correcto</span>":
+"<span class='bad'>Incorrecto</span>";
+
+document.getElementById("r2c2").innerHTML=
+(document.getElementById("resp2c2").value==restoNum)?
+"<span class='ok'>Correcto</span>":
+"<span class='bad'>Incorrecto</span>";
 }
 
 function mostrarSol2(){
 document.getElementById("sol2").style.display="block";
+document.getElementById("sol2").innerHTML=
+`a) ${total} × ${n3}/${d3} = ${act1}<br>
+b) ${total} × ${n4}/${d4} = ${act2}<br><br>
+Sumamos fracciones:<br>
+MCM(${d3},${d4}) = ${m}<br>
+Suma = ${sumFrac}/${m}<br>
+Resto = ${restoFrac}<br><br>
+${restoFrac} de ${total} = ${restoNum}`;
 }
+
 </script>
 
 </body>
