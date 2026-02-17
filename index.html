@@ -3,198 +3,206 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Practica Fracciones Kids - Completa</title>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<title>Ejercicios de Fracciones 1º ESO</title>
 <style>
-body { font-family: 'Roboto', sans-serif; margin:0; background:#f0f8ff; color:#333; padding:20px;}
-h1 { text-align:center; margin-bottom:20px;}
-.card { background:#fff; border-radius:12px; box-shadow:0 6px 12px rgba(0,0,0,0.12); padding:20px; margin-bottom:25px;}
-.step { margin:12px 0; }
-.step label { font-weight:500; display:block; margin-bottom:4px; font-size:16px;}
-.step input { width:100%; padding:10px; font-size:16px; border-radius:6px; border:1px solid #ccc;}
-.step button { margin-top:6px; padding:8px 14px; border:none; border-radius:6px; background:#0077cc; color:#fff; font-weight:bold; cursor:pointer; transition:0.2s; }
-.step button:hover { background:#005fa3;}
-.ok { color:green; font-weight:bold; }
-.bad { color:red; font-weight:bold; }
-.solution { background:#e0f7fa; padding:12px; border-radius:6px; margin-top:12px; font-size:15px; }
-.notes { margin-top:15px; }
-.notes textarea { width:100%; height:80px; padding:8px; border-radius:6px; border:1px solid #ccc; font-size:14px;}
-#progress { width:100%; background:#ddd; border-radius:10px; overflow:hidden; height:20px; margin-bottom:20px; }
-#progress_bar { height:100%; width:0; background:#28a745; transition:width 0.3s; }
-.icon { font-weight:bold; margin-right:6px; }
+body{
+  font-family: Arial, sans-serif;
+  background:#f4f6fa;
+  margin:0;
+  padding:20px;
+}
+h1{text-align:center;}
+.card{
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 6px 15px rgba(0,0,0,0.1);
+  margin-bottom:20px;
+}
+.question{
+  margin-top:15px;
+}
+input{
+  padding:8px;
+  width:120px;
+  margin-top:5px;
+}
+button{
+  padding:8px 14px;
+  margin-top:10px;
+  border:none;
+  border-radius:6px;
+  background:#0066cc;
+  color:white;
+  cursor:pointer;
+}
+button:hover{background:#004c99;}
+.ok{color:green;font-weight:bold;}
+.bad{color:red;font-weight:bold;}
+.solution{
+  background:#eef7ff;
+  padding:15px;
+  border-radius:8px;
+  margin-top:15px;
+  display:none;
+}
+.notes textarea{
+  width:100%;
+  height:80px;
+  margin-top:10px;
+}
 </style>
 </head>
 <body>
 
-<h1>Practica Fracciones - Completa</h1>
+<h1>Ejercicios de Fracciones - 1º ESO</h1>
 
-<div id="progress"><div id="progress_bar"></div></div>
+<div class="card">
+<h3>Ejercicio 1</h3>
 
-<div id="exercise_container"></div>
+<p>
+En el supermercado hemos comprado 
+<b>2/5 kg</b> de manzanas,
+<b>3/4 kg</b> de naranjas y
+<b>4/10 kg</b> de peras.
+</p>
 
-<button onclick="nextExercise()" style="display:block; margin:0 auto; padding:10px 20px; border:none; border-radius:6px; background:#0077cc; color:#fff; font-weight:bold; cursor:pointer;">Siguiente ejercicio</button>
+<p><b>a)</b> ¿De qué fruta hemos comprado más cantidad?</p>
+<input id="e1a" placeholder="Ej: naranjas">
+<p id="r1a"></p>
+
+<p><b>b)</b> ¿De qué fruta hemos comprado menos cantidad?</p>
+<input id="e1b" placeholder="Ej: manzanas">
+<p id="r1b"></p>
+
+<button onclick="corregir1()">Corregir ejercicio</button>
+<button onclick="mostrarSol1()">Mostrar solución paso a paso</button>
+
+<div class="solution" id="sol1">
+<b>Solución paso a paso:</b><br><br>
+
+2/5 = 0,4<br>
+3/4 = 0,75<br>
+4/10 = 0,4<br><br>
+
+Comparamos:<br>
+0,75 > 0,4<br><br>
+
+➡ Más cantidad: <b>naranjas</b><br>
+➡ Menos cantidad: <b>manzanas y peras</b>
+</div>
+
+<div class="notes">
+<b>Notas:</b>
+<textarea></textarea>
+</div>
+</div>
+
+<div class="card">
+<h3>Ejercicio 2</h3>
+
+<p>
+En las Olimpiadas han participado <b>300 alumnos</b>.
+<br>
+1/5 participaron en salto de altura.
+<br>
+3/4 participaron en 100 metros lisos.
+<br>
+El resto participaron en otras disciplinas.
+</p>
+
+<p><b>a)</b> ¿Cuántos participaron en 100 metros lisos?</p>
+<input id="e2a">
+<p id="r2a"></p>
+
+<p><b>b)</b> ¿Cuántos participaron en salto de altura?</p>
+<input id="e2b">
+<p id="r2b"></p>
+
+<p><b>c)</b> ¿Qué fracción participó en otras disciplinas?</p>
+<input id="e2c1" placeholder="Ej: 1/20">
+<p id="r2c1"></p>
+
+<p>¿Cuántos alumnos son?</p>
+<input id="e2c2">
+<p id="r2c2"></p>
+
+<button onclick="corregir2()">Corregir ejercicio</button>
+<button onclick="mostrarSol2()">Mostrar solución paso a paso</button>
+
+<div class="solution" id="sol2">
+<b>Solución paso a paso:</b><br><br>
+
+a) 3/4 de 300<br>
+300 × 3/4 = 900/4 = 225 alumnos<br><br>
+
+b) 1/5 de 300<br>
+300 × 1/5 = 60 alumnos<br><br>
+
+c) Sumamos fracciones:<br>
+1/5 + 3/4<br><br>
+
+MCM(5,4)=20<br>
+1/5 = 4/20<br>
+3/4 = 15/20<br><br>
+
+4/20 + 15/20 = 19/20<br><br>
+
+Fracción restante = 1 - 19/20 = 1/20<br><br>
+
+1/20 de 300 = 15 alumnos
+</div>
+
+<div class="notes">
+<b>Notas:</b>
+<textarea></textarea>
+</div>
+</div>
 
 <script>
-// Funciones matemáticas
-function gcd(a,b){return b?gcd(b,a%b):a;}
-function lcm(a,b){return a*b/gcd(a,b);}
-function parseFraction(str){let parts=str.split('/'); return {num:parseInt(parts[0]), den:parseInt(parts[1])};}
-function fractionToString(n,d){return n+"/"+d;}
+function corregir1(){
+let a=document.getElementById("e1a").value.toLowerCase();
+let b=document.getElementById("e1b").value.toLowerCase();
 
-// Generador de ejercicios
-let exercises=[];
-let currentEx=0;
-let totalEx=5;
+document.getElementById("r1a").innerHTML=
+(a.includes("naranja"))?"<span class='ok'>Correcto</span>":
+"<span class='bad'>Incorrecto</span>";
 
-function generateExercises(){
-  for(let i=0;i<totalEx;i++){
-    let d1=Math.floor(Math.random()*11)+2; // 2 a 12
-    let d2=Math.floor(Math.random()*11)+2;
-    let n1=Math.floor(Math.random()*(d1-1))+1;
-    let n2=Math.floor(Math.random()*(d2-1))+1;
-    let type=Math.random()>0.5?"moda":"comida";
-    exercises.push({n1,d1,n2,d2,type});
-  }
+document.getElementById("r1b").innerHTML=
+(b.includes("manzana")||b.includes("pera"))?
+"<span class='ok'>Correcto</span>":
+"<span class='bad'>Incorrecto</span>";
 }
 
-// Mostrar ejercicio
-function showExercise(){
-  let container=document.getElementById("exercise_container");
-  container.innerHTML="";
-  if(currentEx>=exercises.length){
-    container.innerHTML="<h2>¡Has completado todos los ejercicios!</h2>";
-    document.getElementById("progress_bar").style.width="100%";
-    return;
-  }
+function corregir2(){
+document.getElementById("r2a").innerHTML=
+(document.getElementById("e2a").value==225)?
+"<span class='ok'>Correcto</span>":
+"<span class='bad'>Incorrecto</span>";
 
-  let ex=exercises[currentEx];
-  let desc=ex.type==="moda" ? 
-    `Una tienda tiene prendas. ${ex.n1}/${ex.d1} son camisetas, ${ex.n2}/${ex.d2} son sudaderas. El resto son pantalones.` :
-    `Se prepararon platos. ${ex.n1}/${ex.d1} son pizzas, ${ex.n2}/${ex.d2} son hamburguesas. El resto ensaladas.`;
+document.getElementById("r2b").innerHTML=
+(document.getElementById("e2b").value==60)?
+"<span class='ok'>Correcto</span>":
+"<span class='bad'>Incorrecto</span>";
 
-  let html=`<div class="card">
-    <p><strong>Ejercicio ${currentEx+1}:</strong><br>${desc}</p>
+document.getElementById("r2c1").innerHTML=
+(document.getElementById("e2c1").value=="1/20")?
+"<span class='ok'>Correcto</span>":
+"<span class='bad'>Incorrecto</span>";
 
-    <div class="step">
-      <label>1️⃣ Ajusta las fracciones a denominador común</label>
-      <input type="text" id="step1" placeholder="Ej: 3/4, 5/6">
-      <button onclick="checkStep(1)">Comprobar</button>
-      <p id="out1"></p>
-    </div>
-
-    <div class="step">
-      <label>2️⃣ Suma las fracciones</label>
-      <input type="text" id="step2" placeholder="Ej: 13/12">
-      <button onclick="checkStep(2)">Comprobar</button>
-      <p id="out2"></p>
-    </div>
-
-    <div class="step">
-      <label>3️⃣ Simplifica la fracción resultante</label>
-      <input type="text" id="step3" placeholder="Ej: 1/12">
-      <button onclick="checkStep(3)">Comprobar</button>
-      <p id="out3"></p>
-    </div>
-
-    <button onclick="showSolution()">Mostrar solución paso a paso</button>
-    <div class="solution" id="solution" style="display:none;"></div>
-
-    <div class="notes">
-      <label>📝 Notas personales:</label>
-      <textarea placeholder="Apunta tus observaciones o recordatorios..."></textarea>
-    </div>
-  </div>`;
-
-  container.innerHTML=html;
-  updateProgress();
-  generateSolution();
+document.getElementById("r2c2").innerHTML=
+(document.getElementById("e2c2").value==15)?
+"<span class='ok'>Correcto</span>":
+"<span class='bad'>Incorrecto</span>";
 }
 
-// Comprobar pasos
-function checkStep(step){
-  let ex=exercises[currentEx];
-  let val=document.getElementById(`step${step}`).value.trim();
-  let out=document.getElementById(`out${step}`);
-  let m=lcm(ex.d1,ex.d2);
-  let n1_adj=ex.n1*(m/ex.d1);
-  let n2_adj=ex.n2*(m/ex.d2);
-  let sum=n1_adj+n2_adj;
-  let g=gcd(sum,m);
-  let simplified_n=sum/g;
-  let simplified_d=m/g;
-
-  if(step===1){
-    let correct=fractionToString(n1_adj,m)+", "+fractionToString(n2_adj,m);
-    if(val===correct){
-      out.innerHTML='<span class="icon">✔</span>Correcto';
-      out.className="ok";
-    } else {
-      out.innerHTML='<span class="icon">✘</span>Incorrecto. Ajusta numeradores al MCM ('+m+'). Correcto: '+correct;
-      out.className="bad";
-    }
-  }
-
-  if(step===2){
-    let correct=fractionToString(sum,m);
-    if(val===correct){
-      out.innerHTML='<span class="icon">✔</span>Correcto';
-      out.className="ok";
-    } else {
-      out.innerHTML='<span class="icon">✘</span>Incorrecto. Suma los numeradores: '+n1_adj+'+'+n2_adj+'='+sum+'. Correcto: '+correct;
-      out.className="bad";
-    }
-  }
-
-  if(step===3){
-    let correct=fractionToString(simplified_n,simplified_d);
-    if(val===correct){
-      out.innerHTML='<span class="icon">✔</span>Correcto';
-      out.className="ok";
-    } else {
-      out.innerHTML='<span class="icon">✘</span>Incorrecto. Simplifica la fracción: '+sum+'/'+m+' → '+correct;
-      out.className="bad";
-    }
-  }
+function mostrarSol1(){
+document.getElementById("sol1").style.display="block";
 }
 
-// Generar explicación paso a paso
-function generateSolution(){
-  let ex=exercises[currentEx];
-  let m=lcm(ex.d1,ex.d2);
-  let n1_adj=ex.n1*(m/ex.d1);
-  let n2_adj=ex.n2*(m/ex.d2);
-  let sum=n1_adj+n2_adj;
-  let g=gcd(sum,m);
-  let simplified_n=sum/g;
-  let simplified_d=m/g;
-  let sol=document.getElementById("solution");
-  sol.innerHTML=`<strong>Solución paso a paso:</strong><br>
-1️⃣ Ajustamos ${ex.n1}/${ex.d1} y ${ex.n2}/${ex.d2} a denominador común (${m}): ${n1_adj}/${m}, ${n2_adj}/${m}.<br>
-2️⃣ Sumamos los numeradores: ${n1_adj}+${n2_adj}=${sum} → ${sum}/${m}.<br>
-3️⃣ Simplificamos usando MCD(${sum},${m})=${g} → fracción final: ${simplified_n}/${simplified_d}.`;
-  sol.style.display="none";
+function mostrarSol2(){
+document.getElementById("sol2").style.display="block";
 }
-
-// Mostrar solución
-function showSolution(){
-  document.getElementById("solution").style.display="block";
-}
-
-// Siguiente ejercicio
-function nextExercise(){
-  currentEx++;
-  showExercise();
-}
-
-// Barra progreso
-function updateProgress(){
-  let perc=(currentEx/exercises.length)*100;
-  document.getElementById("progress_bar").style.width=perc+"%";
-}
-
-// Inicializar
-generateExercises();
-showExercise();
 </script>
 
 </body>
